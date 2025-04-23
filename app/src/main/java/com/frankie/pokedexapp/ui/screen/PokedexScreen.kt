@@ -1,4 +1,4 @@
-package com.example.pokedexapp.ui.screen
+package com.frankie.pokedexapp.ui.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,8 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.pokedexapp.ui.viewModel.PokedexUiState
-import com.example.pokedexapp.ui.viewModel.PokedexViewModel
+import com.frankie.pokedexapp.ui.viewModel.PokedexUiState
+import com.frankie.pokedexapp.ui.viewModel.PokedexViewModel
 
 @Preview
 @Composable

@@ -1,6 +1,7 @@
-package com.example.pokedexapp.data.repository
+package com.frankie.pokedexapp.data.repository
 
-import com.example.pokedexapp.data.remote.PokemonApiService
+import com.frankie.pokedexapp.data.model.PokemonDetailResponse
+import com.frankie.pokedexapp.data.remote.PokemonApiService
 
 class PokemonRepository(private val apiService: PokemonApiService) {
 
@@ -11,5 +12,9 @@ class PokemonRepository(private val apiService: PokemonApiService) {
         } catch (e: Exception) {
             emptyList()
         }
+    }
+
+    suspend fun getPokemonDetail(name: String): PokemonDetailResponse{
+        return apiService.getPokemonByName(name)
     }
 }

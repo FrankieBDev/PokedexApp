@@ -1,8 +1,8 @@
-package com.example.pokedexapp.data.model
+package com.frankie.pokedexapp.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class PokemonResponse(
+data class PokemonListResponse(
     @SerializedName("results") val results: List<PokemonResult>
 )
 

@@ -1,4 +1,4 @@
-package com.example.pokedexapp.data.remote
+package com.frankie.pokedexapp.data.remote
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

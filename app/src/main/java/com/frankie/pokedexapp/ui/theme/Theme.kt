@@ -1,6 +1,5 @@
-package com.example.pokedexapp.ui.theme
+package com.frankie.pokedexapp.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
