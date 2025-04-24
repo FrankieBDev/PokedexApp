@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.frankie.pokedexapp.data.model.PokemonDetailResponse
-import com.frankie.pokedexapp.data.remote.RetrofitInstance
 import com.frankie.pokedexapp.data.repository.PokemonRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,10 +12,11 @@ import kotlinx.coroutines.launch
 
 class PokedexViewModel : ViewModel() {
 
-    private val repository: PokemonRepository = PokemonRepository(RetrofitInstance.apiService)
+    private val repository= PokemonRepository()
 
     private val _uiState = MutableStateFlow<PokedexUiState>(PokedexUiState.Loading)
     val uiState: StateFlow <PokedexUiState> = _uiState
+
     private val _pokemonDetail = MutableLiveData<PokemonDetailResponse>()
     val pokemonDetail: LiveData<PokemonDetailResponse> get() = _pokemonDetail
 
@@ -24,10 +24,11 @@ class PokedexViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = PokedexUiState.Loading
             try {
-                val pokemonList = repository.getPokemonList()
-                _uiState.value = PokedexUiState.Success(pokemonList)
+                val response = repository.getPokemonList(limit = 20, offset = 0)
+                val names = response.results.map { it.name }
+                _uiState.value = PokedexUiState.Success(names)
             } catch (e: Exception) {
-                _uiState.value = PokedexUiState.Error("Failed to load Pokemon List")
+                _uiState.value = PokedexUiState.Error("Failed to load Pokémon list")
             }
         }
     }

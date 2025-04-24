@@ -1,20 +1,21 @@
 package com.frankie.pokedexapp.data.repository
 
 import com.frankie.pokedexapp.data.model.PokemonDetailResponse
+import com.frankie.pokedexapp.data.model.PokemonListResponse
 import com.frankie.pokedexapp.data.remote.PokemonApiService
+import com.frankie.pokedexapp.data.remote.RetrofitClient
 
-class PokemonRepository(private val apiService: PokemonApiService) {
 
-    suspend fun getPokemonList(limit: Int = 20, offset: Int = 0): List<String> {
-        return try {
-            val response = apiService.getPokemonList(limit, offset)
-            response.results.map { it.name }
-        } catch (e: Exception) {
-            emptyList()
-        }
+class PokemonRepository {
+
+    private val apiService: PokemonApiService =
+        RetrofitClient.instance.create(PokemonApiService::class.java)
+
+    suspend fun getPokemonList(limit: Int, offset: Int): PokemonListResponse {
+        return apiService.getPokemonList(limit, offset)
     }
 
-    suspend fun getPokemonDetail(name: String): PokemonDetailResponse{
+    suspend fun getPokemonDetail(name: String): PokemonDetailResponse {
         return apiService.getPokemonByName(name)
     }
 }
