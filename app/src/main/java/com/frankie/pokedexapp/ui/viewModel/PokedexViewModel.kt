@@ -25,8 +25,7 @@ class PokedexViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = PokedexUiState.Loading
             try {
-                val response = repository.getPokemonList(limit = 20, offset = 0)
-                val pokemonResults = response.results
+                val pokemonResults = repository.getPokemonList(limit = 20, offset = 0)
                 _uiState.value = PokedexUiState.Success(pokemonResults)
             } catch (e: Exception) {
                 _uiState.value = PokedexUiState.Error("Failed to load Pokémon list")
@@ -34,16 +33,16 @@ class PokedexViewModel : ViewModel() {
         }
     }
 
-    fun getPokemonDetail(name: String) {
-        viewModelScope.launch {
-            try {
-                val response = repository.getPokemonDetail(name)
-                _pokemonDetail.postValue(response)
-            } catch (e: Exception) {
-                _uiState.value = PokedexUiState.Error("Failed to load Pokemon Info")
-            }
-        }
-    }
+//    fun getPokemonDetail(name: String) {
+//        viewModelScope.launch {
+//            try {
+//                val response = repository.getPokemonDetail(name)
+//                _pokemonDetail.postValue(response)
+//            } catch (e: Exception) {
+//                _uiState.value = PokedexUiState.Error("Failed to load Pokemon Info")
+//            }
+//        }
+//    }
 }
 
 sealed class PokedexUiState {
