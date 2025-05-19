@@ -24,7 +24,10 @@ fun NavGraph(
         }
         composable("pokemonDetail/{name}") { backStackEntry ->
             val name = backStackEntry.arguments?.getString("name") ?: return@composable
-            PokemonDetailScreen(name = name, viewModel = viewModel)
+            PokemonDetailScreen(
+                name = name, viewModel = viewModel,
+                navController = navController
+            )
         }
     }
 }

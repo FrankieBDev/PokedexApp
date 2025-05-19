@@ -18,12 +18,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.frankie.pokedexapp.ui.viewModel.PokedexViewModel
+import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokemonDetailScreen(
     name: String,
+    navController: NavController,
     viewModel: PokedexViewModel = viewModel()
 ) {
     LaunchedEffect(name) {
@@ -38,34 +45,55 @@ fun PokemonDetailScreen(
         }
     } else {
         val pokemon = detail!!
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AsyncImage(
-                model = pokemon.sprites.frontDefault,
-                contentDescription = "${pokemon.name} sprite",
-                modifier = Modifier.size(128.dp)
-            )
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(text = "Back to Pokedex")},
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        }
+                    }
+                )
+            }
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AsyncImage(
+                        model = pokemon.sprites.frontDefault,
+                        contentDescription = "${pokemon.name} sprite",
+                        modifier = Modifier.size(128.dp)
+                    )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = pokemon.name.replaceFirstChar { it.uppercase() },
-                style = MaterialTheme.typography.headlineSmall
-            )
+                    Text(
+                        text = pokemon.name.replaceFirstChar { it.uppercase() },
+                        style = MaterialTheme.typography.headlineSmall
+                    )
 
-            Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-            Text(text = "ID: ${pokemon.id}")
+                    Text(text = "ID: ${pokemon.id}")
 
-            Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(8.dp))
 
-            Text(
-                text = "Types: ${pokemon.types.joinToString(","){ it.type.name.replaceFirstChar { it.uppercase()} }}"
-            )
+                    Text(
+                        text = "Type: ${pokemon.types.joinToString(",") { it.type.name.replaceFirstChar { it.uppercase() } }}"
+                    )
+                }
+            }
         }
     }
 }
