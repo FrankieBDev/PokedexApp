@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.frankie.pokedexapp.data.model.PokemonDetailResponse
-import com.frankie.pokedexapp.data.model.PokemonResult
+import com.frankie.pokedexapp.data.model.PokemonResponse
 import com.frankie.pokedexapp.data.repository.PokemonRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,21 +33,21 @@ class PokedexViewModel : ViewModel() {
         }
     }
 
-//    fun getPokemonDetail(name: String) {
-//        viewModelScope.launch {
-//            try {
-//                val response = repository.getPokemonDetail(name)
-//                _pokemonDetail.postValue(response)
-//            } catch (e: Exception) {
-//                _uiState.value = PokedexUiState.Error("Failed to load Pokemon Info")
-//            }
-//        }
-//    }
+    fun getPokemonDetail(name: String) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getPokemonDetail(name)
+                _pokemonDetail.postValue(response)
+            } catch (e: Exception) {
+                _uiState.value = PokedexUiState.Error("Failed to load Pokemon Info")
+            }
+        }
+    }
 }
 
 sealed class PokedexUiState {
     object Loading : PokedexUiState()
-    data class Success(val pokemonList: List<PokemonResult>) : PokedexUiState()
+    data class Success(val pokemonList: List<PokemonResponse>) : PokedexUiState()
     data class Error(val message: String) : PokedexUiState()
 }
 
