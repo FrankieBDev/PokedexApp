@@ -16,12 +16,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.frankie.pokedexapp.ui.viewModel.PokedexViewModel
-import java.util.Locale
 
 @Composable
 fun PokemonDetailScreen(
