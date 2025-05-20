@@ -109,7 +109,7 @@ fun PokemonDetailScreen(
                     Surface(
                         shape = RoundedCornerShape(12.dp),
                         color = Color.White.copy(alpha = 0.9f),
-                        shadowElevation = 8.dp,
+                        shadowElevation = 16.dp,
                         modifier = Modifier
                             .widthIn(min = 280.dp, max = 360.dp)
                             .padding(vertical = 8.dp)
