@@ -3,10 +3,12 @@ package com.frankie.pokedexapp.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -57,8 +59,26 @@ fun PokedexScreen(
 
         when (uiState) {
             is PokedexUiState.Loading -> {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(modifier = Modifier.size(72.dp), color = Color.White)
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CircularProgressIndicator(
+                            color = Color.White,
+                            modifier = Modifier.size(72.dp)
+                        )
+                        Spacer(modifier = Modifier.height(30.dp))
+                        Text(
+                            text = "Loading \n \n Pokemon...",
+                            fontFamily = FontFamily.Monospace,
+                            color = Color.White,
+                            fontSize = 38.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
             is PokedexUiState.Error -> {
