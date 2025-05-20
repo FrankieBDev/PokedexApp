@@ -3,17 +3,15 @@ package com.frankie.pokedexapp.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -47,49 +46,70 @@ fun PokedexScreen(
     LaunchedEffect(Unit) {
         viewModel.fetchPokemonList()
     }
-    Box(modifier = Modifier.fillMaxSize().background(Color.Red)) {
+
+    Box(modifier = Modifier.fillMaxSize()) {
         AsyncImage(
             model = "https://w0.peakpx.com/wallpaper/75/47/HD-wallpaper-pokedex-red-pokemon.jpg",
             contentDescription = null,
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
 
         when (uiState) {
             is PokedexUiState.Loading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        CircularProgressIndicator()
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("Loading Pokemon...")
-                    }
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(modifier = Modifier.size(72.dp), color = Color.White)
                 }
             }
-
+            is PokedexUiState.Error -> {
+                Text(
+                    text = "Something went wrong",
+                    fontFamily = FontFamily.Monospace,
+                    color = Color.White,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontSize = 38.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                )
+            }
             is PokedexUiState.Success -> {
                 val pokemonList = (uiState as PokedexUiState.Success).pokemonList
+                val isLoadingMore = (uiState as PokedexUiState.Success).isLoadingMore
+
                 LazyColumn(
-                    modifier = Modifier
-                        .padding(top = 158.dp, bottom = 92.dp)
+                    modifier = Modifier.padding(top = 158.dp, bottom = 92.dp)
                 ) {
-                    items(pokemonList) { pokemon ->
-                        PokemonListItem(pokemon = pokemon, onClick = {
-                            onPokemonClick(pokemon.name)
-                        })
+                    itemsIndexed(pokemonList) { index, pokemon ->
+                        PokemonListItem(
+                            pokemon = pokemon,
+                            onClick = { onPokemonClick(pokemon.name) }
+                        )
+
+                        if (index == pokemonList.size - 3 && !isLoadingMore) {
+                            LaunchedEffect(Unit) {
+                                viewModel.fetchMorePokemon()
+                            }
+                        }
+                    }
+
+                    if (isLoadingMore) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(color = Color.White)
+                            }
+                        }
                     }
                 }
-            }
-
-            is PokedexUiState.Error -> {
-                Text("Something went wrong")
             }
         }
     }
 }
+
 
     @Composable
     fun PokemonListItem(

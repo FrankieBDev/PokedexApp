@@ -19,7 +19,7 @@ fun NavGraph(
                 viewModel = viewModel,
                 onPokemonClick = { name ->
                     navController.navigate("pokemonDetail/$name")
-                }
+                },
             )
         }
         composable("pokemonDetail/{name}") { backStackEntry ->
