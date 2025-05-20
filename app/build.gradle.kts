@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.pokedexapp"
+    namespace = "com.frankie.pokedexapp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.pokedexapp"
+        applicationId = "com.frankie.pokedexapp"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -40,7 +40,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -49,6 +48,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -60,4 +60,6 @@ dependencies {
     implementation(libs.retrofit.gson)
     implementation(libs.okhttp.logging)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.coil.compose)
+    implementation(libs.navigation.compose)
 }
