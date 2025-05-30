@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class PokedexViewModel : ViewModel() {
-
-    private val repository = PokemonRepository()
+class PokedexViewModel(
+    private val repository: PokemonRepository = PokemonRepository()
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<PokedexUiState>(PokedexUiState.Loading)
     val uiState: StateFlow<PokedexUiState> = _uiState
@@ -26,38 +26,40 @@ class PokedexViewModel : ViewModel() {
     private val currentList = mutableListOf<PokemonResponse>()
 
     fun fetchPokemonList() {
-        viewModelScope.launch {
-            _uiState.value = PokedexUiState.Loading
-            currentOffset = 0
-            currentList.clear()
-            try {
-                val newPokemon = repository.getPokemonList(limit, currentOffset)
-                currentList.addAll(newPokemon)
-                _uiState.value = PokedexUiState.Success(currentList.toList(), isLoadingMore = false)
-                currentOffset += limit
-            } catch (e: Exception) {
-                _uiState.value = PokedexUiState.Error("Failed to load Pokémon list")
-            }
-        }
+        loadPokemonList(reset = true)
     }
 
     fun fetchMorePokemon() {
-        viewModelScope.launch {
-            val currentState = _uiState.value
-            if (currentState is PokedexUiState.Success && !currentState.isLoadingMore) {
-                _uiState.value = currentState.copy(isLoadingMore = true)
-                try {
-                    val newPokemon = repository.getPokemonList(limit, currentOffset)
-                    currentList.addAll(newPokemon)
-                    currentOffset += limit
-                    _uiState.value = PokedexUiState.Success(currentList.toList(), isLoadingMore = false)
-                } catch (e: Exception) {
-                    _uiState.value = PokedexUiState.Error("Failed to load more Pokémon")
-                }
-            }
+        val currentState = _uiState.value
+        if (currentState is PokedexUiState.Success && !currentState.isLoadingMore) {
+            loadPokemonList(reset = false)
         }
     }
 
+    private fun loadPokemonList(reset: Boolean) {
+        viewModelScope.launch {
+            if (_uiState.value is PokedexUiState.Success && !reset) {
+                _uiState.value = (_uiState.value as PokedexUiState.Success).copy(isLoadingMore = true)
+            } else {
+                _uiState.value = PokedexUiState.Loading
+            }
+
+            if (reset) {
+                currentOffset = 0
+                currentList.clear()
+            }
+
+            try {
+                val newPokemon = repository.getPokemonList(limit, currentOffset)
+                currentList.addAll(newPokemon)
+                currentOffset += limit
+                _uiState.value = PokedexUiState.Success(currentList.toList(), isLoadingMore = false)
+            } catch (e: Exception) {
+                val errorMessage = if (reset) "Failed to load Pokémon list" else "Failed to load more Pokémon"
+                _uiState.value = PokedexUiState.Error(errorMessage)
+            }
+        }
+    }
 
     fun getPokemonDetail(name: String) {
         viewModelScope.launch {
@@ -71,7 +73,6 @@ class PokedexViewModel : ViewModel() {
     }
 }
 
-
 sealed class PokedexUiState {
     object Loading : PokedexUiState()
     data class Success(
@@ -80,5 +81,3 @@ sealed class PokedexUiState {
     ) : PokedexUiState()
     data class Error(val message: String) : PokedexUiState()
 }
-
-
