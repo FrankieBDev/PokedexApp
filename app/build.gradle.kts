@@ -37,6 +37,19 @@ android {
     buildFeatures {
         compose = true
     }
+    packaging {
+        resources {
+            excludes += listOf(
+                "/META-INF/LICENSE.md",
+                "/META-INF/LICENSE-notice.md",
+                "/META-INF/LICENSE",
+                "/META-INF/NOTICE",
+                "/META-INF/NOTICE.txt",
+                "/META-INF/LICENSE.txt",
+                "/META-INF/DEPENDENCIES"
+            )
+        }
+    }
 }
 
 dependencies {
@@ -51,11 +64,8 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
-    testImplementation(libs.mockk.agent)
     testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.mockk.android)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)

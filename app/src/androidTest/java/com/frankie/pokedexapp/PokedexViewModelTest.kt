@@ -39,10 +39,10 @@ class PokedexViewModelTest {
     }
 
     @Test
-    fun  fetchPokemonListReturnsSuccessWithData() = runTest {
+    fun fetchPokemonListReturnsSuccessWithData() = runTest {
         val mockList = listOf(
             PokemonResponse("Pikachu", "url", "Electric"),
-            PokemonResponse(    "Bulbasaur", "url", "Grass")
+            PokemonResponse("Bulbasaur", "url", "Grass")
         )
 
         coEvery { mockRepository.getPokemonList(any(), any()) } returns mockList
@@ -59,27 +59,31 @@ class PokedexViewModelTest {
     fun fetchMorePokemonReturnsSuccessWithData() = runTest {
         val mockList = listOf(
             PokemonResponse("Pikachu", "url", "Electric"),
-            PokemonResponse(    "Bulbasaur", "url", "Grass")
+            PokemonResponse("Bulbasaur", "url", "Grass")
         )
 
         coEvery { mockRepository.getPokemonList(any(), any()) } returns mockList
+
+        viewModel.fetchPokemonList()
+        advanceUntilIdle()
 
         viewModel.fetchMorePokemon()
         advanceUntilIdle()
 
         val state = viewModel.uiState.first()
         assertTrue(state is PokedexUiState.Success)
-        assertEquals(2, (state as PokedexUiState.Success).pokemonList.size)
+        assertEquals(4, (state as PokedexUiState.Success).pokemonList.size)
     }
 
+    @Test
+    fun fetchPokemonListReturnsError() = runTest {
+        coEvery { mockRepository.getPokemonList(any(), any()) } throws Exception("404")
+
+        viewModel.fetchPokemonList()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.first()
+        assertTrue(state is PokedexUiState.Error)
     }
+}
 
-// refactor above to align with newly refactored viewModel
-
-//    @Test
-//    fun getPokemonDetailLoadsCorrectDetails() = runTest {
-//
-//    }
-
-
-//}
